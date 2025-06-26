@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	_ "github.com/google/uuid"
 )
 
 type ToDoService struct {
@@ -25,10 +24,6 @@ func NewToDoService() (*ToDoService, error) {
 	return &ToDoService{repo: repo}, nil
 }
 
-func (s *ToDoService) GetAll() ([]*models.ToDo, error) {
-	return s.repo.GetAll()
-}
-
 func (s *ToDoService) Create(title string) (*models.ToDo, error) {
 	if title == "" {
 		return nil, errors.New("title cannot be empty")
@@ -43,4 +38,24 @@ func (s *ToDoService) Create(title string) (*models.ToDo, error) {
 		return nil, err
 	}
 	return todo, nil
+}
+
+func (s *ToDoService) GetAll() ([]*models.ToDo, error) {
+	return s.repo.GetAll()
+}
+
+func (s *ToDoService) GetByID(id string) (*models.ToDo, error) {
+	return s.repo.GetByID(id)
+}
+
+func (s *ToDoService) UpdateTitle(id string, title string) error {
+	return s.repo.UpdateTitle(id, title)
+}
+
+func (s *ToDoService) UpdateCompleted(id string, completed bool) error {
+	return s.repo.UpdateCompleted(id, completed)
+}
+
+func (s *ToDoService) Delete(id string) error {
+	return s.repo.Delete(id)
 }
