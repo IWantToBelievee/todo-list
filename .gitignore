@@ -1,4 +1,48 @@
-build/bin
-node_modules
-frontend/dist
+# Binary files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Binary test files
+*.test
+
+# Output files
+*.out
+
+# Build directories
+build/
+dist/
+
+# Dependencies Node.js
+node_modules/
+package.json.md5
+
+# Temp files
+tmp/
+.DS_Store
+.env
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# Frontend artifacts
+frontend/dist/
+frontend/build/
+frontend/public/bundle.*
+frontend/wailsjs/
+
+
+# Wails files
+wails
+wails.json.md5
+wailsjs/
+
+# Configs
+config.json
+
+# Databases
 todos.db
