@@ -25,10 +25,26 @@ func (a *App) startup(ctx context.Context) {
 
 func (a *App) shutdown(ctx context.Context) {}
 
+func (a *App) CreateToDo(title string) (*models.ToDo, error) {
+	return a.todoSvc.Create(title)
+}
+
 func (a *App) GetToDos() ([]*models.ToDo, error) {
 	return a.todoSvc.GetAll()
 }
 
-func (a *App) CreateToDo(title string) (*models.ToDo, error) {
-	return a.todoSvc.Create(title)
+func (a *App) GetToDoByID(id string) (*models.ToDo, error) {
+	return a.todoSvc.GetByID(id)
+}
+
+func (a *App) UpdateToDoTitle(id string, title string) error {
+	return a.todoSvc.UpdateTitle(id, title)
+}
+
+func (a *App) UpdateToDoCompleted(id string, completed bool) error {
+	return a.todoSvc.UpdateCompleted(id, completed)
+}
+
+func (a *App) DeleteToDo(id string) error {
+	return a.todoSvc.Delete(id)
 }
