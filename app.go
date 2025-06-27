@@ -14,7 +14,7 @@ type App struct {
 func NewApp() *App {
 	todoSvc, err := services.NewToDoService()
 	if err != nil {
-		return &App{todoSvc: nil}
+		panic("failed to initialize ToDoService: " + err.Error()) // Or use a logger
 	}
 	return &App{todoSvc: todoSvc}
 }
