@@ -39,7 +39,7 @@ function App() {
                     className="flex flex-1 justify-center p-4 shadow-2xl rounded-r-2xl h-[100vh] fixed w-20"
                 >
                     <div className='flex flex-col justify-between'>
-                        <div className='flex flex-col gap-4'>
+                        <div className='flex flex-col gap-4 items-center'>
                             <button 
                                 className="btn btn-ghost btn-circle"
                                 onClick={async () => {
@@ -50,9 +50,9 @@ function App() {
                                 <HiPlus className='w-8 h-8'/>
                             </button>
                         </div>
-                        <div className='flex flex-col gap-4'>
+                        <div className='flex flex-col gap-4 items-center'>
                             <div className="dropdown dropdown-top">
-                                <div tabIndex={0} role="button" className="btn btn-square m-1">
+                                <div tabIndex={0} role="button" className="btn btn-ghost btn-circle m-1">
                                     <PiPaintBrushHousehold className='w-6 h-6' />
                                 </div>
                                 <ul tabIndex={0} className="dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-2xl">
