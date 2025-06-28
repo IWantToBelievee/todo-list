@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"sync"
+	"time"
 
 	models "myproject/internals/models"
 )
@@ -53,11 +54,14 @@ func (r *SQLiteToDoRepository) GetAll() ([]*models.ToDo, error) {
 	defer rows.Close()
 
 	var todos []*models.ToDo
+
 	for rows.Next() {
 		todo := models.ToDo{}
-		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.CreatedAt); err != nil {
+		var CreatedAt string
+		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &CreatedAt); err != nil {
 			return nil, err
 		}
+		todo.CreatedAt, _ = time.Parse("2006-01-02 15:04:05.999999999-07:00", CreatedAt)
 		todos = append(todos, &todo)
 	}
 	return todos, nil
@@ -74,9 +78,11 @@ func (r *SQLiteToDoRepository) GetByID(id string) (*models.ToDo, error) {
 	defer row.Close()
 
 	todo := models.ToDo{}
-	if err := row.Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.CreatedAt); err != nil {
+	var CreatedAt string
+	if err := row.Scan(&todo.ID, &todo.Title, &todo.Completed, &CreatedAt); err != nil {
 		return nil, err
 	}
+	todo.CreatedAt, _ = time.Parse("2006-01-02 15:04:05.999999999-07:00", CreatedAt)
 	return &todo, nil
 }
 
