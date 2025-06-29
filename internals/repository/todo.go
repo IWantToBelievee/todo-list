@@ -58,7 +58,7 @@ func (r *SQLiteToDoRepository) GetAll() ([]*models.ToDo, error) {
 	for rows.Next() {
 		todo := models.ToDo{}
 		var CreatedAt string
-		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &CreatedAt); err != nil {
+		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &CreatedAt, &todo.OrderId); err != nil {
 			return nil, err
 		}
 		todo.CreatedAt, _ = time.Parse("2006-01-02 15:04:05.999999999-07:00", CreatedAt)
@@ -79,7 +79,7 @@ func (r *SQLiteToDoRepository) GetByID(id string) (*models.ToDo, error) {
 
 	todo := models.ToDo{}
 	var CreatedAt string
-	if err := row.Scan(&todo.ID, &todo.Title, &todo.Completed, &CreatedAt); err != nil {
+	if err := row.Scan(&todo.ID, &todo.Title, &todo.Completed, &CreatedAt, &todo.OrderId); err != nil {
 		return nil, err
 	}
 	todo.CreatedAt, _ = time.Parse("2006-01-02 15:04:05.999999999-07:00", CreatedAt)

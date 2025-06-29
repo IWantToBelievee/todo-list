@@ -22,7 +22,8 @@ func InitDB(filepath string) (*sql.DB, error) {
             id TEXT PRIMARY KEY,
             title TEXT NOT NULL,
             completed INTEGER NOT NULL,
-			created_at TEXT NOT NULL
+			created_at TEXT NOT NULL,
+			order_id INTEGER AUTOINCREMENT
         )
     `)
 	if err != nil {

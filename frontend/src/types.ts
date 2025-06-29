@@ -3,4 +3,5 @@ export default interface ToDo {
     title: string;
     completed: boolean;
     created_at: Date;
+    order_id: number;
 }
