@@ -1,13 +1,15 @@
 import ToDoList from './ToDoList';
 import { HiPlus } from 'react-icons/hi';
-import { CreateToDo, GetToDos } from '../wailsjs/go/main/App';
+import { CreateToDo, GetOrder, GetToDoByID, GetToDos, UpdateToDo } from '../wailsjs/go/main/App';
 import { PiPaintBrushHousehold } from "react-icons/pi";
 import { useEffect, useState } from 'react';
 import { themeChange } from "theme-change";
-import ToDo from './types';
+import { ToDo, UpdateRequest } from './types';
 
 function App() {
     const [todos, setTodos] = useState<ToDo[]>([]);
+    const [order, setOrder] = useState<string[]>([]);
+
     const loadTodos = async () => {
         try {
             setTodos([...(await GetToDos())])
@@ -15,6 +17,43 @@ function App() {
             setTodos([])
         }
     }
+
+    const loadOneTodo = async (id: string) => {
+        let todo = await GetToDoByID(id);
+        setTodos((prev) => prev.map((i) => i.id == todo.id ? todo : i));
+    }
+
+    const updateTodo = (req: UpdateRequest) => {
+        UpdateToDo(req);
+        loadOneTodo(req.id);
+    }
+
+    const toggleCompleted = (id: string) => {
+        UpdateToDo({id: id, completed: todos.find((t) => t.id == id).completed ? false : true});
+        loadOneTodo(id);
+    }
+
+    const loadOrder = async () => {
+        try {
+            setOrder(await GetOrder());
+        } catch (error) {
+            setOrder([]);
+        }
+    }
+
+    useEffect(() => {
+        loadTodos();
+    }, []);
+
+    useEffect(() => {
+        loadOrder();
+    }, []);
+
+    const handleCreateTodo = () => {
+        CreateToDo();
+        loadTodos();
+        loadOrder();
+    };
 
     const themes = [
         { value: "default", label: "Default" },
@@ -28,10 +67,6 @@ function App() {
         themeChange(false);
     }, []);
 
-    useEffect(() => {
-        loadTodos();
-    }, []);
-
     return (
         <div id="App">
             <div className="flex gap-6 p-0">
@@ -42,10 +77,7 @@ function App() {
                         <div className='flex flex-col gap-4 items-center'>
                             <button 
                                 className="btn btn-ghost btn-circle"
-                                onClick={async () => {
-                                    await CreateToDo("Undefined");
-                                    loadTodos();
-                                }}
+                                onClick={() => handleCreateTodo()}
                             >
                                 <HiPlus className='w-8 h-8'/>
                             </button>
@@ -74,7 +106,15 @@ function App() {
                         </div>
                     </div>
                 </div>
-                {todos ? (<ToDoList todos={todos} loadTodos={loadTodos} />) : (
+                {todos ? (<ToDoList 
+                            todos={todos} 
+                            loadTodos={loadTodos} 
+                            updateTodo={updateTodo}
+                            toggleCompleted={toggleCompleted}
+                            order={order} 
+                            setOrder={setOrder} 
+                            loadOrder={loadOrder}
+                        />) : (
                     <h2>There are no todos</h2>
                 )}
             </div>
