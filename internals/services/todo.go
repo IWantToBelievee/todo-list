@@ -1,8 +1,6 @@
 package services
 
 import (
-	"errors"
-	"myproject/internals/db"
 	"myproject/internals/models"
 	"myproject/internals/repository"
 	"time"
@@ -15,47 +13,51 @@ type ToDoService struct {
 }
 
 func NewToDoService() (*ToDoService, error) {
-	db_, err := db.InitDB("./todos.db")
+	repo, err := repository.NewJsonToDoRepository("todos-data.json")
 	if err != nil {
 		return nil, err
 	}
-	repo := repository.NewSQLiteToDoRepository(db_)
-
 	return &ToDoService{repo: repo}, nil
 }
 
-func (s *ToDoService) Create(title string) (*models.ToDo, error) {
-	if title == "" {
-		return nil, errors.New("title cannot be empty")
-	}
+func (s *ToDoService) Create() error {
 	todo := &models.ToDo{
 		ID:        uuid.NewString(),
-		Title:     title,
+		Title:     "Undefined",
 		Completed: false,
 		CreatedAt: time.Now(),
 	}
 	if err := s.repo.Create(todo); err != nil {
-		return nil, err
+		return err
 	}
-	return todo, nil
+	return nil
 }
 
 func (s *ToDoService) GetAll() ([]*models.ToDo, error) {
 	return s.repo.GetAll()
 }
 
-func (s *ToDoService) GetByID(id string) (*models.ToDo, error) {
+func (s *ToDoService) GetByID(id *string) (*models.ToDo, error) {
 	return s.repo.GetByID(id)
 }
 
-func (s *ToDoService) UpdateTitle(id string, title string) error {
-	return s.repo.UpdateTitle(id, title)
+func (s *ToDoService) Update(req *models.UpdateRequest) error {
+	if req != nil {
+		if req.Title != nil || req.Description != nil || req.Completed != nil {
+			return s.repo.Update(req)
+		}
+	}
+	return nil
 }
 
-func (s *ToDoService) UpdateCompleted(id string, completed bool) error {
-	return s.repo.UpdateCompleted(id, completed)
-}
-
-func (s *ToDoService) Delete(id string) error {
+func (s *ToDoService) Delete(id *string) error {
 	return s.repo.Delete(id)
+}
+
+func (s *ToDoService) SaveOrder(order []*string) error {
+	return s.repo.SaveOrder(order)
+}
+
+func (s *ToDoService) GetOrder() ([]*string, error) {
+	return s.repo.GetOrder()
 }
